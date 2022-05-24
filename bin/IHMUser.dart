@@ -15,24 +15,21 @@ class IHMUser {
       print("|    4 - voir le uid                 |");
       print("|    5 - ajouter a un groupe         |");
       print("|    6 - afficher les utilisateurs   |");
-      print("|    7 - donner les droits à root    |");
       print("|    0 - retour                      |");
       print("+------------------------------------+");
-      i = IHMFtp.choixMenu(7);
+      i = IHMFtp.choixMenu(6);
       if (i == 1) {
-        await IHMUser.createUser();
+        await createUser();
       } else if (i == 2) {
-        await IHMUser.delUser();
+        await delUser();
       } else if (i == 3) {
-        await IHMUser.voirGid();
+        await voirGid();
       } else if (i == 4) {
-        await IHMUser.voirUid();
+        await voirUid();
       } else if (i == 5) {
-        await IHMUser.ajouterGroupe();
+        await ajouterGroupe();
       } else if (i == 6) {
-        await IHMUser.afficherUser();
-      } else if (i == 7) {
-        await IHMUser.droitRoot();
+        await afficherUser();
       }
     }
     print("Retour menu précédent.");
@@ -53,11 +50,11 @@ class IHMUser {
       print("+------------------------------------+");
       i = IHMFtp.choixMenu(3);
       if (i == 1) {
-        await IHMUser.createGroup();
+        await createGroup();
       } else if (i == 2) {
-        await IHMUser.delGroup();
+        await delGroup();
       } else if (i == 3) {
-        await IHMUser.afficherGroup();
+        await afficherGroup();
       }
     }
     print("Retour menu précédent.");
@@ -89,7 +86,7 @@ class IHMUser {
       } else if (i == 4) {
         await voirInfos();
       } else if (i == 5) {
-        await User.lien();
+        IHMFtp.resultat(await User.lien());
       } else if (i == 6) {
         await modifierMDP();
       }
@@ -147,7 +144,8 @@ class IHMUser {
 
   static Future<void> createUser() async {
     String nom = IHMFtp.saisieString("le nom");
-    await User.createUser(nom);
+    IHMFtp.resultat(await User.createUser(nom));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> createUserVirtuel() async {
@@ -156,61 +154,62 @@ class IHMUser {
         IHMFtp.saisieString("sur quel utilisateur vous voulez le mapper ");
     int uid = IHMFtp.saisieInt("l'iud");
     int gid = IHMFtp.saisieInt("le gid");
-    await User.createUserVirtuel(nom, map, uid, gid);
+    IHMFtp.resultat(await User.createUserVirtuel(nom, map, uid, gid));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> delUserVirtuel() async {
     String nom = IHMFtp.saisieString("le nom de l'utilisateur");
-    await User.supprimerUtilisateurVirtuel(nom);
+    IHMFtp.resultat(await User.supprimerUtilisateurVirtuel(nom));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> voirInfos() async {
     String nom = IHMFtp.saisieString("le nom de l'utilisateur");
-    await User.voirInfos(nom);
+    IHMFtp.resultat(await User.voirInfos(nom));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> modifierMDP() async {
     String nom = IHMFtp.saisieString("le nom de l'utilisateur");
-    await User.modifierMotDePasse(nom);
+    IHMFtp.resultat(await User.modifierMotDePasse(nom));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> delUser() async {
     String nom = IHMFtp.saisieString("le nom");
-    await User.userdel(nom);
-  }
-
-  static Future<void> droitRoot() async {
-    String nom = IHMFtp.saisieString("le nom");
-    await User.droitRoot(nom);
+    IHMFtp.resultat(await User.userdel(nom));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> createGroup() async {
     String nom = IHMFtp.saisieString("le nom");
     String gid = IHMFtp.saisieString("le gid (1001 de base)");
-    await User.createGroup(nom, gid);
+    IHMFtp.resultat(await User.createGroup(nom, gid));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> delGroup() async {
     String nom = IHMFtp.saisieString("le nom");
-
-    await User.delGroup(nom);
+    IHMFtp.resultat(await User.delGroup(nom));
+    await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> voirUid() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
-    await User.voirUid(nom);
+    IHMFtp.resultat(await User.voirUid(nom));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> voirGid() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
-    await User.voirGid(nom);
+    IHMFtp.resultat(await User.voirGid(nom));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> afficherUser() async {
     print("voici tout les utilisateurs existant:");
-    await User.afficherUser();
+    IHMFtp.resultat(await User.afficherUser());
     await Future.delayed(Duration(seconds: 3));
   }
 
@@ -218,13 +217,13 @@ class IHMUser {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe =
         IHMFtp.saisieString("le groupe auquelles vous souhaitez l'utilisateur");
-    await User.addGroup(nom, groupe);
+    IHMFtp.resultat(await User.addGroup(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> afficherGroup() async {
     print("voici tout les groupes existant:");
-    await User.afficherGroup();
+    IHMFtp.resultat(await User.afficherGroup());
     await Future.delayed(Duration(seconds: 3));
   }
 
@@ -232,7 +231,7 @@ class IHMUser {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String a = IHMFtp.saisieString(
         "la limitation de la bande passante du téléchargement voulue");
-    await User.modifierDownload(nom, a);
+    IHMFtp.resultat(await User.modifierDownload(nom, a));
     await Future.delayed(Duration(seconds: 1));
   }
 
@@ -240,14 +239,14 @@ class IHMUser {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString(
         "la limitation de la bande passante de l'envoie voulue");
-    await User.modifierUpload(nom, groupe);
+    IHMFtp.resultat(await User.modifierUpload(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> fichier() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString("le quota en nombre de fichiers max");
-    await User.modifierFichierMax(nom, groupe);
+    IHMFtp.resultat(await User.modifierFichierMax(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
@@ -255,35 +254,35 @@ class IHMUser {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe =
         IHMFtp.saisieString("le quota en taille maximale utilisable");
-    await User.modifierTailleMax(nom, groupe);
+    IHMFtp.resultat(await User.modifierTailleMax(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> autoriserClient() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString("le client ou l'ip");
-    await User.modifierAutoriserClient(nom, groupe);
+    IHMFtp.resultat(await User.modifierAutoriserClient(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> refuserClient() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString("le client ou l'ip");
-    await User.modifierRefuserClient(nom, groupe);
+    IHMFtp.resultat(await User.modifierRefuserClient(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> autoriserConnection() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString("l'IP'");
-    await User.modifierAutorisationConnection(nom, groupe);
+    IHMFtp.resultat(await User.modifierAutorisationConnection(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> refuserConnection() async {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString("l'IP'");
-    await User.modifierRefuserConnection(nom, groupe);
+    IHMFtp.resultat(await User.modifierRefuserConnection(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
@@ -291,7 +290,7 @@ class IHMUser {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe = IHMFtp.saisieString(
         "la limitation horaire(ex: 8h30-17h00 = 0830-1700)");
-    await User.modifierHoraire(nom, groupe);
+    IHMFtp.resultat(await User.modifierHoraire(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 
@@ -299,7 +298,7 @@ class IHMUser {
     String nom = IHMFtp.saisieString("l'utilisateur");
     String groupe =
         IHMFtp.saisieString("le nombre de sessions simultanées autorisées");
-    await User.modifierNombreSessions(nom, groupe);
+    IHMFtp.resultat(await User.modifierNombreSessions(nom, groupe));
     await Future.delayed(Duration(seconds: 1));
   }
 }
