@@ -1,54 +1,63 @@
 import 'dart:io';
 
 class Ftp {
-  static Future<void> installPureFtpd() async {
+  static Future<int> installPureFtpd() async {
     String cmd = "sudo apt install pure-ftpd -y";
-    Process p = await Process.start("bash", ["-c", cmd]);
-    await stdout.addStream(p.stdout);
-    await stderr.addStream(p.stderr);
+    ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 
-  static Future<void> uninstallPureFtpd() async {
+  static Future<int> uninstallPureFtpd() async {
     String cmd = "sudo apt purge pure-ftpd -y";
-    Process p = await Process.start("bash", ["-c", cmd]);
-    await stdout.addStream(p.stdout);
-    await stderr.addStream(p.stderr);
+    ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 
-  static Future<void> update() async {
+  static Future<int> update() async {
     String cmd = "sudo apt update";
-    Process p = await Process.start("bash", ["-c", cmd]);
-    await stdout.addStream(p.stdout);
-    await stderr.addStream(p.stderr);
+    ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 
-  static Future<void> restart() async {
+  static Future<int> restart() async {
     String cmd = "sudo service pure-ftpd restart";
-    Process p = await Process.start("bash", ["-c", cmd]);
-    await stdout.addStream(p.stdout);
-    await stderr.addStream(p.stderr);
+    ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 
-  static Future<void> addWrapper(nom) async {
+  static Future<int> addWrapper(nom) async {
     String cmd =
         'sudo touch /etc/pure-ftpd/conf/$nom | sudo chmod 755 /etc/pure-ftpd/conf/$nom';
-    ProcessResult q = await Process.run("bash", ["-c", cmd]);
+    ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = p.exitCode;
+    print(exitCode);
+    return exitCode;
   }
 
-  static Future<void> dellWrapper(nom) async {
+  static Future<int> dellWrapper(nom) async {
     String cmd = "sudo rm /etc/pure-ftpd/conf/$nom";
     ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 
-  static Future<void> afficheWrapper(nom) async {
+  static Future<int> afficheWrapper(nom) async {
     String cmd = "sudo cat /etc/pure-ftpd/conf/$nom";
-    Process p = await Process.start("bash", ["-c", cmd]);
-    await stdout.addStream(p.stdout);
-    await stderr.addStream(p.stderr);
+    ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    print(p.stdout);
+    print(p.stderr);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 
-  static Future<void> modifieWrapper(nom, l) async {
+  static Future<int> modifieWrapper(nom, l) async {
     String cmd = 'sudo echo "$l" > /etc/pure-ftpd/conf/$nom';
     ProcessResult p = await Process.run("bash", ["-c", cmd]);
+    var exitCode = await p.exitCode;
+    return exitCode;
   }
 }
