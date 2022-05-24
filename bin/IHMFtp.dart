@@ -64,13 +64,17 @@ class IHMFtp {
       print("+------------------------------------+");
       i = choixMenu(4);
       if (i == 1) {
-        await Ftp.installPureFtpd();
+        resultat(await Ftp.installPureFtpd());
+        await Future.delayed(Duration(seconds: 1));
       } else if (i == 2) {
-        await Ftp.uninstallPureFtpd();
+        resultat(await Ftp.uninstallPureFtpd());
+        await Future.delayed(Duration(seconds: 1));
       } else if (i == 3) {
-        await Ftp.update();
+        resultat(await Ftp.update());
+        await Future.delayed(Duration(seconds: 1));
       } else if (i == 4) {
-        await Ftp.restart();
+        resultat(await Ftp.restart());
+        await Future.delayed(Duration(seconds: 1));
       }
     }
     print("Retour menu précédent.");
@@ -161,21 +165,21 @@ class IHMFtp {
   static Future<void> addWrapper() async {
     String nom =
         IHMFtp.saisieString("le nom du fichier de configuration a créer");
-    await Ftp.addWrapper(nom);
+    resultat(await Ftp.addWrapper(nom));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> dellWrapper() async {
     String nom =
         IHMFtp.saisieString("le nom du fichier de configuration à supprimer");
-    await Ftp.dellWrapper(nom);
+    resultat(await Ftp.dellWrapper(nom));
     await Future.delayed(Duration(seconds: 1));
   }
 
   static Future<void> afficheWrapper() async {
     String nom =
         IHMFtp.saisieString("le nom du fichier de configuration à afficher");
-    await Ftp.afficheWrapper(nom);
+    resultat(await Ftp.afficheWrapper(nom));
     await Future.delayed(Duration(seconds: 1));
   }
 
@@ -183,7 +187,15 @@ class IHMFtp {
     String nom =
         IHMFtp.saisieString("le nom du fichier de configuration à modifier");
     String l = IHMFtp.saisieString("le nouveau contenu du fichier");
-    await Ftp.modifieWrapper(nom, l);
+    resultat(await Ftp.modifieWrapper(nom, l));
     await Future.delayed(Duration(seconds: 1));
+  }
+
+  static Future<void> resultat(res) async {
+    if (res == 0) {
+      print("\x1B[32m" + "commande executée avec succés!" + "\x1B[0m");
+    } else {
+      print("\x1B[31m" + "erreur dans la commande!" + "\x1B[0m");
+    }
   }
 }
